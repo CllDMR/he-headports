@@ -1,5 +1,7 @@
 const router = require("express-promise-router")();
 
+var extractDuplicateField = require("mongoose-extract-duplicate-field");
+
 const AuthController = require("../controllers/auth");
 
 const AdminAccountController = require("../controllers/adminAccount");
@@ -135,25 +137,29 @@ router.post("/candidate/signIn/normal", async function(req, res, next) {
     const { _id, __v, ...others } = CandidateAccount._doc;
 
     return res.json({ token: _id, ...others });
-  } else {
-    return res.json({ err: "userName, password required" });
-  }
+  } else throw new Error("userName, password required");
 });
 
 router.post("/candidate/signUp", async function(req, res, next) {
   const { email, userName, password } = req.body;
   if (email && userName && password) {
-    const candidateAccount = await CandidateAccountController.newAccount({
-      email,
-      userName,
-      password
-    });
+    try {
+      const candidateAccount = await CandidateAccountController.newAccount({
+        email,
+        userName,
+        password
+      });
 
-    const { _id, __v, ...others } = candidateAccount;
-    return res.json({ token: _id, ...others });
-  } else {
-    throw new Error("email, userName, password required");
-  }
+      const { _id, __v, ...others } = candidateAccount;
+      return res.json({ token: _id, ...others });
+    } catch (error) {
+      if (error && error.code === 11000) {
+        var field = extractDuplicateField(error);
+
+        return res.json({ duplicatedField: field });
+      } else throw error;
+    }
+  } else throw new Error("email, userName, password required");
 });
 
 router.use(
