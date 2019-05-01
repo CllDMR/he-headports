@@ -1,7 +1,5 @@
 const router = require("express-promise-router")();
 
-var extractDuplicateField = require("mongoose-extract-duplicate-field");
-
 const AuthController = require("../controllers/auth");
 
 const AdminAccountController = require("../controllers/adminAccount");
@@ -153,11 +151,15 @@ router.post("/candidate/signUp", async function(req, res, next) {
       const { _id, __v, ...others } = candidateAccount;
       return res.json({ token: _id, ...others });
     } catch (error) {
-      if (error && error.code === 11000) {
-        var field = extractDuplicateField(error);
-
-        return res.json({ duplicatedField: field });
-      } else throw error;
+      if (error) {
+        for (const field in error.errors) {
+          if (error.errors.hasOwnProperty(field)) {
+            const fieldName = error.errors[field];
+            throw new Error(fieldName.message);
+          }
+        }
+      }
+      throw error;
     }
   } else throw new Error("email, userName, password required");
 });

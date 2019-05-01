@@ -21,7 +21,7 @@ var app = express();
 var db = mongoose
   .connect(
     "mongodb://celal:demir@headports-shard-00-00-tpcok.mongodb.net:27017,headports-shard-00-01-tpcok.mongodb.net:27017,headports-shard-00-02-tpcok.mongodb.net:27017/test?ssl=true&replicaSet=HeadPorts-shard-0&authSource=admin&retryWrites=true",
-    { useNewUrlParser: true }
+    { useCreateIndex: true, useNewUrlParser: true }
   )
   .then(
     () => {

@@ -1,5 +1,6 @@
 var mongoose = require("mongoose");
 var bcrypt = require("bcrypt");
+const beautifyUnique = require("mongoose-beautiful-unique-validation");
 
 var CandidateAccountSchema = new mongoose.Schema({
   email: {
@@ -36,6 +37,8 @@ var CandidateAccountSchema = new mongoose.Schema({
     }
   ]
 });
+
+CandidateAccountSchema.plugin(beautifyUnique);
 
 CandidateAccountSchema.pre("save", async function(next) {
   try {
