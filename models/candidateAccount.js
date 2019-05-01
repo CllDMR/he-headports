@@ -3,10 +3,12 @@ var bcrypt = require("bcrypt");
 
 var CandidateAccountSchema = new mongoose.Schema({
   email: {
-    type: String
+    type: String,
+    unique: true
   },
   userName: {
-    type: String
+    type: String,
+    unique: true
   },
   password: {
     type: String

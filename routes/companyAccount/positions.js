@@ -66,11 +66,7 @@ router.post("/", async function(req, res, next) {
     );
     await company.save();
     return res.json({ positionData: position });
-  } else {
-    throw new Error(
-      "name startDate finishDate wage workType address city district postCode token required"
-    );
-  }
+  } else throw new Error("name startDate finishDate wage workType address city district postCode token required");
 });
 
 router.post("/:pID/addNewTestMetaData", async function(req, res, next) {

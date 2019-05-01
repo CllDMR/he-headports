@@ -58,6 +58,33 @@ router.get("/:pID/start", async function(req, res, next) {
           throw new Error("Daha önce bu position'a başvurulmuş");
         }
       }
+      const position = await PositionController.findPosition({ pID });
+
+      const test = position.testMetaDatas[0].test;
+
+      var whenStarted = DateTime.fromObject({
+        zone: "Europe/Istanbul"
+      }).toJSDate();
+
+      var testResult = await TestResultController.newTestResult({
+        candidate: req.account._id,
+        position: pID,
+        test: test._id,
+        whenStarted,
+        state: "STARTED"
+      });
+      req.account.startedPositions.push(pID);
+
+      req.account.testResults.push(testResult._doc._id);
+
+      req.account.save();
+
+      return res.json({
+        pID,
+        trID: testResult._doc._id,
+        tID: test._id,
+        qID: test.questions[0]._id
+      });
     } catch (error) {
       throw error;
     }
@@ -174,7 +201,17 @@ router.post("/:pID-:trID-:tID-:qID/answer", async function(req, res, next) {
 
     const position = await PositionController.findPosition({ pID });
 
-    const test = position.testMetaDatas[1].test;
+    var test;
+
+    for (let index = 0; index < position.testMetaDatas.length; index++) {
+      const testMetaData = position.testMetaDatas[index];
+      if (testMetaData.test._id == tID) {
+        if (!position.testMetaDatas[index + 1]) {
+          return res.json({ testsFinished: true });
+        }
+        test = position.testMetaDatas[index + 1].test;
+      }
+    }
 
     var whenStarted = DateTime.fromObject({
       zone: "Europe/Istanbul"

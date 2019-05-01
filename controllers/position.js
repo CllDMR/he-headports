@@ -7,10 +7,8 @@ module.exports = {
       const newPosition = await new Position(data);
       const position = await newPosition.save();
       return position._doc;
-    } catch (e) {
-      console.log(e);
-
-      return { err: e.message };
+    } catch (error) {
+      throw error;
     }
   },
   findPosition: async function({ pID }) {
@@ -23,8 +21,6 @@ module.exports = {
       });
       return position;
     } catch (error) {
-      console.log(error);
-
       throw error;
     }
   },
@@ -35,10 +31,8 @@ module.exports = {
       });
 
       return positions;
-    } catch (e) {
-      console.log(e);
-
-      return { err: e.message };
+    } catch (error) {
+      throw error;
     }
   }
 };
