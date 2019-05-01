@@ -8,12 +8,12 @@ var multer = require("multer");
 var upload = multer();
 var mongoose = require("mongoose");
 var bodyParser = require("body-parser");
-// var cors = require("cors");
+var cors = require("cors");
 
-// var corsOptions = {
-//   origin: "http://localhost:3000",
-//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-// };
+var corsOptions = {
+  origin: true, //"https://headports-api-deneme.furiousx29.now.sh"
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
 
 var app = express();
 
@@ -31,7 +31,7 @@ var db = mongoose
       console.log("Can not connect to the database \n" + err);
     }
   );
-// app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
