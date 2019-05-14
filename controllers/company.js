@@ -27,7 +27,7 @@ module.exports = {
   }) {
     try {
       const oldCompany = await Company.findById(companyId);
-      
+
       const newCompanyAccount = await new CompanyAccount({
         firstName,
         lastName,
@@ -44,14 +44,9 @@ module.exports = {
       newCompanyAccount._doc.company = new mongoose.mongo.ObjectId(companyId);
       const companyAccount = await newCompanyAccount.save();
 
-      const newAuth = await AuthController.newAuth({
-        UID: companyAccount._doc._id,
-        accountType: 2
-      });
       return {
         companyAccount: companyAccount._doc,
-        company: newCompany._doc,
-        auth: newAuth
+        company: newCompany._doc
       };
     } catch (error) {
       throw error;

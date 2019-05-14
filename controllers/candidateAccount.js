@@ -15,37 +15,25 @@ module.exports = {
     try {
       const account = await CandidateAccount.findOne({ userName });
 
-      if (!account) {
-        const err = new Error("No CandidateAccount");
-        err.status = 401;
-        throw err;
-      }
+      if (!account) throw new Error("No CandidateAccount");
 
       const match = await bcrypt.compare(password, account.password);
 
-      if (match) {
-        //login
-        return { ...account };
-      } else {
-        return { err: "Wrong password" };
-      }
-    } catch (e) {
-      return { err: e.message };
+      if (match) account._doc;
+      else throw new Error("Wrong password");
+    } catch (error) {
+      throw error;
     }
   },
   findAccountById: async function(data) {
     try {
       const account = await CandidateAccount.findById(data);
 
-      if (!account) {
-        const err = new Error("No CandidateAccount");
-        err.status = 401;
-        throw err;
-      }
+      if (!account) throw new Error("No CandidateAccount");
 
       return account;
-    } catch (e) {
-      return { err: e.message };
+    } catch (error) {
+      throw error;
     }
   }
 };

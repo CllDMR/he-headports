@@ -148,7 +148,8 @@ router.get("/:pID-:trID-:tID-:qID/get", async function(req, res, next) {
     questionIndex,
     question,
     answersData: answers,
-    progression
+    progression,
+    testName: testData.testName
   };
 
   return res.json(questionForSend);
@@ -233,7 +234,9 @@ router.post("/:pID-:trID-:tID-:qID/answer", async function(req, res, next) {
       pID,
       trID: testResult._doc._id,
       tID: test._id,
-      qID: test.questions[0]._id
+      qID: test.questions[0]._id,
+      nextTestName: test.testName,
+      testFinished: true
     });
   }
 

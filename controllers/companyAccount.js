@@ -8,28 +8,20 @@ module.exports = {
       const newCompanyAccount = await new CompanyAccount(data);
       const companyAccount = await newCompanyAccount.save();
       return companyAccount._doc;
-    } catch (e) {
-      return { err: e.message };
+    } catch (error) {
+      throw error;
     }
   },
   findAccount: async function({ userName, password }) {
     try {
       const account = await CompanyAccount.findOne({ userName });
 
-      if (!account) {
-        const err = new Error("No CompanyAccount");
-        err.status = 401;
-        throw err;
-      }
+      if (!account) throw new Error("No CompanyAccount");
 
       const match = await bcrypt.compare(password, account.password);
 
-      if (match) {
-        //login
-        return account;
-      } else {
-        throw new Error("Wrong password");
-      }
+      if (match) return account;
+      else throw new Error("Wrong password");
     } catch (error) {
       throw error;
     }
@@ -46,29 +38,23 @@ module.exports = {
           ]
         }
       });
-      if (!account) {
-        const err = new Error("No CompanyAccount");
-        err.status = 401;
-        throw err;
-      }
+      if (!account) throw new Error("No CompanyAccount");
 
-      return { ...account };
-    } catch (e) {
-      return { err: e.message };
+      return account._doc;
+    } catch (error) {
+      console.log(error);
+
+      throw error;
     }
   },
   findAccountByIdWithOutPopulate: async function(data) {
     try {
       const account = await CompanyAccount.findById(data);
-      if (!account) {
-        const err = new Error("No CompanyAccount");
-        err.status = 401;
-        throw err;
-      }
+      if (!account) throw new Error("No CompanyAccount");
 
       return account;
-    } catch (e) {
-      return { err: e.message };
+    } catch (error) {
+      throw error;
     }
   }
 };

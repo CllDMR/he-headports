@@ -1,5 +1,6 @@
 var mongoose = require("mongoose");
 var bcrypt = require("bcrypt");
+const beautifyUnique = require("mongoose-beautiful-unique-validation");
 
 var AdminAccountSchema = new mongoose.Schema({
   userName: {
@@ -11,6 +12,8 @@ var AdminAccountSchema = new mongoose.Schema({
     required: true
   }
 });
+
+AdminAccountSchema.plugin(beautifyUnique);
 
 AdminAccountSchema.pre("save", async function(next) {
   try {

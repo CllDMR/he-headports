@@ -19,23 +19,27 @@ router.post("/", async function(req, res) {
     area,
     email
   } = req.body;
-  if (
-    companyId &&
-    firstName &&
-    lastName &&
-    department &&
-    userName &&
-    password &&
-    area &&
+
+  if (!companyId) throw new Error("companyId  required");
+  if (!firstName) throw new Error("firstName  required");
+  if (!lastName) throw new Error("lastName  required");
+  if (!department) throw new Error("department  required");
+  if (!userName) throw new Error("userName  required");
+  if (!password) throw new Error("password  required");
+  if (!area) throw new Error("area  required");
+  if (!email) throw new Error("email  required");
+
+  const newCompanyAccount = await CompanyController.newCompanyAccount({
+    companyId,
+    firstName,
+    lastName,
+    department,
+    userName,
+    password,
+    area,
     email
-  ) {
-    const newCompanyAccount = await CompanyController.newCompanyAccount(data);
-    return res.json(newCompanyAccount);
-  } else {
-    throw new Error(
-      "companyId ,firstName ,lastName ,department ,userName ,password ,area ,email required"
-    );
-  }
+  });
+  return res.json(newCompanyAccount);
 });
 
 module.exports = router;

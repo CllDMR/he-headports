@@ -1,5 +1,6 @@
 var mongoose = require("mongoose");
 var bcrypt = require("bcrypt");
+const beautifyUnique = require("mongoose-beautiful-unique-validation");
 
 var CompanyAccountSchema = new mongoose.Schema({
   firstName: {
@@ -35,6 +36,8 @@ var CompanyAccountSchema = new mongoose.Schema({
     required: true
   }
 });
+
+CompanyAccountSchema.plugin(beautifyUnique);
 
 CompanyAccountSchema.pre("save", async function(next) {
   try {
