@@ -50,6 +50,7 @@ module.exports = {
   findAccountByIdWithOutPopulate: async function(data) {
     try {
       const account = await CompanyAccount.findById(data);
+
       if (!account) throw new Error("No CompanyAccount");
 
       return account;

@@ -28,45 +28,42 @@ router.post("/", async function(req, res, next) {
     district,
     postCode
   } = req.body;
-  if (
-    name &&
-    startDate &&
-    finishDate &&
-    wage &&
-    workType &&
-    token &&
-    address &&
-    city &&
-    district &&
-    postCode
-  ) {
-    var companyAccount = await CompanyAccountController.findAccountById(token);
 
-    const positionData = {
-      name,
-      startDate,
-      finishDate,
-      wage,
-      workType,
-      address,
-      city,
-      district,
-      postCode,
-      HRStaff: new mongoose.mongo.ObjectId(companyAccount._doc._id),
-      company: new mongoose.mongo.ObjectId(companyAccount._doc.company._id)
-    };
-    const position = await PositionController.newPosition(positionData);
+  if (!name) throw new Error("name required");
+  if (!startDate) throw new Error("startDate required");
+  if (!finishDate) throw new Error("finishDate required");
+  if (!wage) throw new Error("wage required");
+  if (!workType) throw new Error("workType required");
+  if (!token) throw new Error("token required");
+  if (!address) throw new Error("address required");
+  if (!city) throw new Error("city required");
+  if (!district) throw new Error("district required");
+  if (!postCode) throw new Error("postCode required");
 
-    const company = await CompanyController.findAccountById({
-      id: companyAccount._doc.company._id
-    });
+  var companyAccount = await CompanyAccountController.findAccountById(token);
 
-    await company._doc.positions.push(
-      new mongoose.mongo.ObjectId(position._id)
-    );
-    await company.save();
-    return res.json({ positionData: position });
-  } else throw new Error("name startDate finishDate wage workType address city district postCode token required");
+  const positionData = {
+    name,
+    startDate,
+    finishDate,
+    wage,
+    workType,
+    address,
+    city,
+    district,
+    postCode,
+    HRStaff: new mongoose.mongo.ObjectId(companyAccount._id),
+    company: new mongoose.mongo.ObjectId(companyAccount.company._id)
+  };
+  const position = await PositionController.newPosition(positionData);
+
+  const company = await CompanyController.findAccountById({
+    id: companyAccount.company._id
+  });
+
+  await company.positions.push(new mongoose.mongo.ObjectId(position._id));
+  await company.save();
+  return res.json(position);
 });
 
 router.post("/:pID/addNewTestMetaData", async function(req, res, next) {
