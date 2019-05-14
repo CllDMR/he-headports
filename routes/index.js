@@ -234,6 +234,5 @@ router.use(
   },
   require("./companyAccount")
 );
-router.use("/test", require("./test"));
 
 module.exports = router;

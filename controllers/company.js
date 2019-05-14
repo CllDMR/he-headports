@@ -93,7 +93,7 @@ module.exports = {
       if (!company) {
         throw new Error("No Company");
       }
-      return company._doc;
+      return company;
     } catch (error) {
       throw error;
     }

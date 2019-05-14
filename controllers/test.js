@@ -5,9 +5,8 @@ module.exports = {
     try {
       const newTest = await new Test(data);
       const test = await newTest.save();
-    } catch (e) {
-      console.log("e", e);
-      return { err: e.message };
+    } catch (error) {
+      throw error;
     }
   },
   findTests: async function() {

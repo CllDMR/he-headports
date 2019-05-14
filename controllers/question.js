@@ -6,9 +6,16 @@ module.exports = {
       const newQuestion = await new Question(data);
       const question = await newQuestion.save();
       return question;
-    } catch (e) {
-      console.log("e", e);
-      return { err: e.message };
+    } catch (error) {
+      throw error;
+    }
+  },
+  findAllQuestion: async function() {
+    try {
+      const questions = await Question.find();
+      return questions;
+    } catch (error) {
+      throw error;
     }
   },
   findQuestionById: async function({ qID }) {

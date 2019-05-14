@@ -1,9 +1,13 @@
 const router = require("express-promise-router")();
 
-const QuestionController = require("../controllers/question");
-const TestController = require("../controllers/test");
+const QuestionController = require("../../controllers/question");
 
-router.post("/question", async function(req, res) {
+router.get("/", async function(req, res, next) {
+  var questions = await QuestionController.findAllQuestion();
+  return res.json(questions);
+});
+
+router.post("/", async function(req, res, next) {
   const { questionType, paragraph, question, answersData } = req.body;
 
   switch (questionType) {
@@ -37,21 +41,12 @@ router.post("/question", async function(req, res) {
   return res.json({ statusMsg: "Question Created." });
 });
 
-router.post("/test", async function(req, res) {
-  const {
-    questions,
-    testName,
-    categoryName,
-    estimatedFinishingTime
-  } = req.body;
-
-  await TestController.newTest({
-    questions,
-    testName,
-    categoryName,
-    estimatedFinishingTime
+router.get("/:qID", async function(req, res, next) {
+  var question = await QuestionController.findQuestionById({
+    qID: req.params.qID
   });
-  return res.json({ statusMsg: "Test Created" });
+
+  return res.json(question);
 });
 
 module.exports = router;
