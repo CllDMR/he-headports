@@ -10,10 +10,12 @@ router.get("/", async function(req, res, next) {
 router.post("/", async function(req, res, next) {
   const { questionType, paragraph, question, answersData } = req.body;
 
+  var question;
+
   switch (questionType) {
     case 1:
       // paragraf tipi -> question + answers + paragraph
-      await QuestionController.newQuestion({
+      question = await QuestionController.newQuestion({
         questionType,
         paragraph,
         question,
@@ -23,7 +25,7 @@ router.post("/", async function(req, res, next) {
     case 2:
       // question + answers
 
-      await QuestionController.newQuestion({
+      question = await QuestionController.newQuestion({
         questionType,
         question,
         answersData
@@ -32,13 +34,16 @@ router.post("/", async function(req, res, next) {
     case 3:
       // question + textInput ( frontend )
 
-      await QuestionController.newQuestion({ questionType, question });
+      question = await QuestionController.newQuestion({
+        questionType,
+        question
+      });
       break;
     default:
       break;
   }
 
-  return res.json({ statusMsg: "Question Created." });
+  return res.json({ statusMsg: "Question Created.", question });
 });
 
 router.get("/:qID", async function(req, res, next) {
